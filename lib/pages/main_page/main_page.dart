@@ -27,10 +27,11 @@ class _MainPageState extends State<MainPage> {
   Widget _buildBody() {
     return Container(
       decoration: const BoxDecoration(
-          image: DecorationImage(
-        image: AssetImage(ImagePath.backgroundDay),
-        fit: BoxFit.cover,
-      )),
+        image: DecorationImage(
+          image: AssetImage(ImagePath.backgroundDay),
+          fit: BoxFit.cover,
+        ),
+      ),
       child: SafeArea(
         top: false,
         child: ListView(
