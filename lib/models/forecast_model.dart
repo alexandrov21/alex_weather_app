@@ -1,23 +1,23 @@
-import 'package:flutter/material.dart';
 
+import 'package:json_annotation/json_annotation.dart';
+import 'city.dart';
+import 'point_of_weather.dart';
+part 'forecast_model.g.dart';
+@JsonSerializable()
 class ForecastModel {
-  final String day;
-  final IconData weather;
-  final String temp;
-  final String detail;
-  final String hours;
-  final IconData weatherByHours;
-  final String tempByHours;
-  final String detailByHours;
+  City? city;
+  List<PointOfWeather>? list;
 
   ForecastModel(
-    this.day,
-    this.weather,
-    this.temp,
-    this.detail,
-    this.hours,
-    this.weatherByHours,
-    this.tempByHours,
-    this.detailByHours,
+    this.city,
+    this.list,
   );
+  factory ForecastModel.fromJson(Map<String, dynamic> json) {
+    return _$ForecastModelFromJson(json);
+  }
+
+  Map<String, dynamic> toJson() => _$ForecastModelToJson(this);
 }
+
+
+

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:task_3/models/forecast_model.dart';
 import 'package:task_3/pages/main_page/views/forecast_details.dart';
 import 'package:task_3/pages/main_page/views/forecast_info.dart';
+import 'package:task_3/services/weather_api_client.dart';
 import 'package:task_3/views/weather_drop_down.dart';
 import 'package:task_3/views/weather_text_field.dart';
 import '../../utils/image_path.dart';
@@ -15,11 +17,26 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   bool _isValueByDays = true;
+  String _city = 'London';
+  WeatherApiClient client = WeatherApiClient();
+  ForecastModel? data;
+
+  Future<void> getData() async {
+    data = await client.getCurrentWeather(_city);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _buildBody(),
+      body: FutureBuilder(
+        future: getData(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return _buildBody();
+          }
+          return Container();
+        },
+      ),
       bottomNavigationBar: _buildBottomNavigationBar(),
     );
   }
@@ -55,7 +72,11 @@ class _MainPageState extends State<MainPage> {
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Row(
             children: [
-              Expanded(child: WeatherTextField(city: (city) {})),
+              Expanded(child: WeatherTextField(city: (city) {
+                setState(() {
+                  _city = city;
+                });
+              })),
               WeatherDropDown(onDropDownChanged: (isValueByDays) {
                 setState(() {
                   _isValueByDays = isValueByDays;
@@ -67,21 +88,24 @@ class _MainPageState extends State<MainPage> {
         const SizedBox(
           height: 24,
         ),
-        const Text(
-          'London',
+        Text(
+          data?.city?.name ?? '',
           style: TextStyles.cityText,
         ),
         const SizedBox(
           height: 12,
         ),
-        const Text(
-          '26.3°',
+        Text(
+          "${data?.list?[0].main?.temp}°",
           style: TextStyles.mainTempText,
         ),
         ForecastInfo(
           isValueByDays: _isValueByDays,
+          data: data,
         ),
-        const ForecastDetails(),
+        ForecastDetails(
+          data: data,
+        ),
       ],
     );
   }

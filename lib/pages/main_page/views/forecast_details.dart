@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../../../models/forecast_model.dart';
 import '../../../utils/text_styles.dart';
 
 class ForecastDetails extends StatefulWidget {
-  const ForecastDetails({Key? key}) : super(key: key);
+  final ForecastModel? data;
+
+  const ForecastDetails({Key? key, required this.data}) : super(key: key);
 
   @override
   State<ForecastDetails> createState() => _ForecastDetailsState();
@@ -47,13 +50,14 @@ class _ForecastDetailsState extends State<ForecastDetails> {
 
   Widget _buildCityDetails() {
     return Row(
-      children: const [
+      children: [
         Expanded(
           child: Text(
-            'London, United Kingdom',
+            '${widget.data?.city?.name}, ${widget.data?.city?.country}',
+            style: TextStyles.cityDetailsText,
           ),
         ),
-        Icon(
+        const Icon(
           Icons.more_horiz_outlined,
           color: Colors.black,
         ),
@@ -74,28 +78,28 @@ class _ForecastDetailsState extends State<ForecastDetails> {
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
+            children: [
               Text(
-                '26.3°',
+                "${widget.data?.list?[0].main?.temp}°",
                 style: TextStyles.detailsTemp,
               ),
-              SizedBox(height: 8),
-              Text('Sunny'),
-              SizedBox(height: 8),
-              Text('Chance of rain 0%'),
-              SizedBox(height: 8),
-              Text('Humidity 5%'),
+              const SizedBox(height: 8),
+              Text(widget.data?.list?[0].weather?[0].main ?? ''),
+              const SizedBox(height: 8),
+              Text('Speed of wind ${widget.data?.list?[0].wind?.speed} km/h'),
+              const SizedBox(height: 8),
+              Text('Humidity ${widget.data?.list?[0].main?.humidity} %'),
             ],
           ),
         ),
-        const Padding(
-          padding: EdgeInsets.only(
-            right: 60,
+        Padding(
+          padding: const EdgeInsets.only(
+            right: 48,
+            bottom: 40,
           ),
-          child: Icon(
-            Icons.sunny,
-            size: 100,
-            color: Colors.orange,
+          child: Image.network(
+            'http://openweathermap.org/img/wn/${widget.data?.list?[0].weather?[0].icon}.png',
+            scale: 0.6,
           ),
         ),
       ],

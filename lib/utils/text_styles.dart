@@ -14,6 +14,9 @@ abstract class TextStyles {
     color: Colors.black54,
   );
   static const detailsTemp = TextStyle(
-      fontSize: 40,
+    fontSize: 40,
+  );
+  static const cityDetailsText = TextStyle(
+    fontSize: 16,
   );
 }

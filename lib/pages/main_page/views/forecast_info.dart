@@ -7,10 +7,12 @@ import '../../../utils/app_colors.dart';
 
 class ForecastInfo extends StatefulWidget {
   final bool isValueByDays;
+  final ForecastModel? data;
 
   const ForecastInfo({
     Key? key,
     required this.isValueByDays,
+    required this.data,
   }) : super(key: key);
 
   @override
@@ -44,80 +46,76 @@ class _ForecastInfoState extends State<ForecastInfo> {
   }
 
   Widget _buildForecastInfo() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          vertical: 20,
-          horizontal: 16,
-        ),
-        child: _buildTileForecast(),
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        vertical: 20,
+        horizontal: 16,
       ),
+      child: _buildTileForecast(),
     );
   }
 
   Widget _buildTileForecast() {
-    return Row(
-      children: ForecastMock.forecast.map(
-        (weather) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 20,
-            ),
-            child: widget.isValueByDays
-                ? _buildWeatherByDays(weather)
-                : _buildWeatherByHours(weather),
-          );
+    print(widget.data?.list?.length);
+    return Expanded(
+      child: ListView.builder(
+        itemCount: widget.data?.list?.length ?? 0,
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (BuildContext context, int index) {
+          return widget.isValueByDays
+              ? _buildWeatherByDays(index)
+              : _buildWeatherByHours();
         },
-      ).toList(),
+      ),
     );
   }
 
-  Widget _buildWeatherByDays(ForecastModel weather) {
+  Widget _buildWeatherByDays(index) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Text(weather.day),
+        // Text(weather.day),
         const SizedBox(height: 8),
-        Icon(
-          weather.weather,
-          color: Colors.white,
-          size: 32,
+        Image.network(
+          'http://openweathermap.org/img/wn/${widget.data?.list?[index].weather?[index].icon}.png',
         ),
         const SizedBox(height: 8),
         Text(
-          weather.temp,
+          widget.data?.list?[index].main?.temp.toString() ?? '',
           style: TextStyles.infoTemp,
         ),
         const SizedBox(height: 8),
         Text(
-          weather.detail,
+          widget.data?.list?[index].main?.humidity.toString() ?? '',
           style: TextStyles.infoDetail,
         ),
       ],
     );
   }
 
-  Widget _buildWeatherByHours(ForecastModel weather) {
-    return Column(
-      children: [
-        Text(weather.hours),
-        const SizedBox(height: 8),
-        Icon(
-          weather.weatherByHours,
-          color: Colors.white,
-          size: 32,
-        ),
-        const SizedBox(height: 8),
-        Text(
-          weather.tempByHours,
-          style: TextStyles.infoTemp,
-        ),
-        const SizedBox(height: 8),
-        Text(
-          weather.detailByHours,
-          style: TextStyles.infoDetail,
-        ),
-      ],
-    );
+  Widget _buildWeatherByHours() {
+    return Container();
+    //   Column(
+    //   children: [
+    //     Text(weather.hours),
+    //     const SizedBox(height: 8),
+    //     Icon(
+    //       weather.weatherByHours,
+    //       color: Colors.white,
+    //       size: 32,
+    //     ),
+    //     const SizedBox(height: 8),
+    //     Text(
+    //       weather.tempByHours,
+    //       style: TextStyles.infoTemp,
+    //     ),
+    //     const SizedBox(height: 8),
+    //     Text(
+    //       weather.detailByHours,
+    //       style: TextStyles.infoDetail,
+    //     ),
+    //   ],
+    // );
   }
 }
