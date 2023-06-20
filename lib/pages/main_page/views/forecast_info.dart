@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:task_3/mocks/forecast_mock.dart';
+import 'package:intl/intl.dart';
 import 'package:task_3/models/forecast_model.dart';
 import 'package:task_3/utils/text_styles.dart';
 
@@ -28,7 +28,7 @@ class _ForecastInfoState extends State<ForecastInfo> {
   Widget _buildBody() {
     return Padding(
       padding: const EdgeInsets.only(
-        top: 40,
+        top: 32,
         bottom: 20,
         left: 16,
         right: 16,
@@ -56,66 +56,111 @@ class _ForecastInfoState extends State<ForecastInfo> {
   }
 
   Widget _buildTileForecast() {
-    print(widget.data?.list?.length);
-    return Expanded(
+    return SizedBox(
+      height: MediaQuery.of(context).size.height / 5.7,
       child: ListView.builder(
-        itemCount: widget.data?.list?.length ?? 0,
+        itemCount: widget.isValueByDays ? 5 : 9,
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
         itemBuilder: (BuildContext context, int index) {
-          return widget.isValueByDays
-              ? _buildWeatherByDays(index)
-              : _buildWeatherByHours();
+          if (widget.isValueByDays) {
+            if (index == 0) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: _buildWeatherByDays(index),
+              );
+            }
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: _buildWeatherByDays(index * 8),
+            );
+          }
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: _buildWeatherByHours(index),
+          );
         },
       ),
     );
   }
 
   Widget _buildWeatherByDays(index) {
+    final dateResult = widget.data?.list?[index].dt_txt?.split(' ');
+    String formatterDate = DateFormat.E().format(
+      DateTime.parse(dateResult?[0] ?? ''),
+    );
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        // Text(weather.day),
-        const SizedBox(height: 8),
-        Image.network(
-          'http://openweathermap.org/img/wn/${widget.data?.list?[index].weather?[index].icon}.png',
+        Text(
+          formatterDate,
+          style: TextStyles.formattedDateText,
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 4),
+        Image.network(
+          'http://openweathermap.org/img/wn/${widget.data?.list?[index].weather?.first.icon}.png',
+        ),
+        const SizedBox(height: 4),
         Text(
           widget.data?.list?[index].main?.temp.toString() ?? '',
           style: TextStyles.infoTemp,
         ),
         const SizedBox(height: 8),
-        Text(
-          widget.data?.list?[index].main?.humidity.toString() ?? '',
-          style: TextStyles.infoDetail,
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              '${widget.data?.list?[index].main?.pressure}',
+              style: TextStyles.infoDetail,
+            ),
+            const Text(
+              'pressure',
+              style: TextStyles.infoDetail,
+            )
+          ],
         ),
       ],
     );
   }
 
-  Widget _buildWeatherByHours() {
-    return Container();
-    //   Column(
-    //   children: [
-    //     Text(weather.hours),
-    //     const SizedBox(height: 8),
-    //     Icon(
-    //       weather.weatherByHours,
-    //       color: Colors.white,
-    //       size: 32,
-    //     ),
-    //     const SizedBox(height: 8),
-    //     Text(
-    //       weather.tempByHours,
-    //       style: TextStyles.infoTemp,
-    //     ),
-    //     const SizedBox(height: 8),
-    //     Text(
-    //       weather.detailByHours,
-    //       style: TextStyles.infoDetail,
-    //     ),
-    //   ],
+  Widget _buildWeatherByHours(index) {
+    final timeResult = widget.data?.list?[index].dt_txt?.split(' ');
+    final shortTimeResult = timeResult?[1].split(':');
+    final formattedTime = shortTimeResult?[0];
+    // String? formattedTime = DateFormat.Hm().format(
+    //   DateTime.parse(timeResult?[1] ?? ''),
     // );
+    return Column(
+      children: [
+        Text(
+          formattedTime ?? '',
+          style: TextStyles.formattedTimeText,
+        ),
+        Image.network(
+          'http://openweathermap.org/img/wn/${widget.data?.list?[index].weather?.first.icon}.png',
+        ),
+        const SizedBox(height: 4),
+        Text(
+          widget.data?.list?[index].main?.temp.toString() ?? '',
+          style: TextStyles.infoTemp,
+        ),
+        const SizedBox(height: 8),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              '${widget.data?.list?[index].main?.pressure}',
+              style: TextStyles.infoDetail,
+            ),
+            const Text(
+              'pressure',
+              style: TextStyles.infoDetail,
+            )
+          ],
+        ),
+      ],
+    );
   }
 }

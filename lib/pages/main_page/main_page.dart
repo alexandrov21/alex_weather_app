@@ -50,16 +50,13 @@ class _MainPageState extends State<MainPage> {
         ),
       ),
       child: SafeArea(
-        top: false,
-        child: ListView(
-          children: [
-            const SizedBox(
-              height: 20,
-            ),
-            Center(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 20),
+            child: Center(
               child: _buildMainInfo(),
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -70,23 +67,10 @@ class _MainPageState extends State<MainPage> {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: Row(
-            children: [
-              Expanded(child: WeatherTextField(city: (city) {
-                setState(() {
-                  _city = city;
-                });
-              })),
-              WeatherDropDown(onDropDownChanged: (isValueByDays) {
-                setState(() {
-                  _isValueByDays = isValueByDays;
-                });
-              }),
-            ],
-          ),
+          child: _buildTopNavigationBar(),
         ),
         const SizedBox(
-          height: 24,
+          height: 20,
         ),
         Text(
           data?.city?.name ?? '',
@@ -106,6 +90,25 @@ class _MainPageState extends State<MainPage> {
         ForecastDetails(
           data: data,
         ),
+      ],
+    );
+  }
+
+  Widget _buildTopNavigationBar(){
+    return Row(
+      children: [
+        Expanded(
+          child: WeatherTextField(city: (city) {
+            setState(() {
+              _city = city;
+            });
+          }),
+        ),
+        WeatherDropDown(onDropDownChanged: (isValueByDays) {
+          setState(() {
+            _isValueByDays = isValueByDays;
+          });
+        }),
       ],
     );
   }

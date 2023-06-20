@@ -6,6 +6,8 @@ part 'main.g.dart';
 class Main {
   double? temp;
   int? humidity;
+  int? pressure;
+  double? feels_like;
 
   Main(
     this.temp,

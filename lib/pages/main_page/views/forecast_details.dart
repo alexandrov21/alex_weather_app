@@ -71,26 +71,12 @@ class _ForecastDetailsState extends State<ForecastDetails> {
       children: [
         Padding(
           padding: const EdgeInsets.only(
-            top: 52,
+            top: 44,
             left: 20,
             right: 20,
             bottom: 20,
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "${widget.data?.list?[0].main?.temp}°",
-                style: TextStyles.detailsTemp,
-              ),
-              const SizedBox(height: 8),
-              Text(widget.data?.list?[0].weather?[0].main ?? ''),
-              const SizedBox(height: 8),
-              Text('Speed of wind ${widget.data?.list?[0].wind?.speed} km/h'),
-              const SizedBox(height: 8),
-              Text('Humidity ${widget.data?.list?[0].main?.humidity} %'),
-            ],
-          ),
+          child: _buildDetailsCharacteristics(),
         ),
         Padding(
           padding: const EdgeInsets.only(
@@ -102,6 +88,28 @@ class _ForecastDetailsState extends State<ForecastDetails> {
             scale: 0.6,
           ),
         ),
+      ],
+    );
+  }
+
+  Widget _buildDetailsCharacteristics(){
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Feels like:',
+          style: TextStyles.feelsLikeText,
+        ),
+        Text(
+          "${widget.data?.list?[0].main?.feels_like}°",
+          style: TextStyles.detailsTemp,
+        ),
+        const SizedBox(height: 8),
+        Text(widget.data?.list?[0].weather?[0].main ?? ''),
+        const SizedBox(height: 8),
+        Text('Speed of wind ${widget.data?.list?[0].wind?.speed} km/h'),
+        const SizedBox(height: 8),
+        Text('Humidity ${widget.data?.list?[0].main?.humidity} %'),
       ],
     );
   }

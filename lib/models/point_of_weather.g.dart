@@ -17,11 +17,13 @@ PointOfWeather _$PointOfWeatherFromJson(Map<String, dynamic> json) =>
           .toList()
       ..wind = json['wind'] == null
           ? null
-          : Wind.fromJson(json['wind'] as Map<String, dynamic>);
+          : Wind.fromJson(json['wind'] as Map<String, dynamic>)
+      ..dt_txt = json['dt_txt'] as String?;
 
 Map<String, dynamic> _$PointOfWeatherToJson(PointOfWeather instance) =>
     <String, dynamic>{
       'main': instance.main,
       'weather': instance.weather,
       'wind': instance.wind,
+      'dt_txt': instance.dt_txt,
     };

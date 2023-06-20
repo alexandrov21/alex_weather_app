@@ -19,4 +19,13 @@ abstract class TextStyles {
   static const cityDetailsText = TextStyle(
     fontSize: 16,
   );
+  static const formattedDateText = TextStyle(
+    fontSize: 16,
+  );
+  static const formattedTimeText = TextStyle(
+    fontSize: 16,
+  );
+  static const feelsLikeText = TextStyle(
+    fontSize: 20,
+  );
 }

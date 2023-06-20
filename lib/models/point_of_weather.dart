@@ -9,6 +9,7 @@ class PointOfWeather {
   Main? main;
   List<Weather>? weather;
   Wind? wind;
+  String? dt_txt;
 
   PointOfWeather(this.main);
   factory PointOfWeather.fromJson(Map<String, dynamic> json) {
