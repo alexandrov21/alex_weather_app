@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:task_3/utils/light_app_colors.dart';
 
 import '../../../models/forecast_model.dart';
-import '../../../utils/text_styles.dart';
+import '../../../utils/light_text_styles.dart';
+import '../../../utils/themes.dart';
 
 class ForecastDetails extends StatefulWidget {
   final ForecastModel? data;
 
-  const ForecastDetails({Key? key, required this.data}) : super(key: key);
+  const ForecastDetails({
+    Key? key,
+    required this.data,
+  }) : super(key: key);
 
   @override
   State<ForecastDetails> createState() => _ForecastDetailsState();
@@ -54,12 +59,12 @@ class _ForecastDetailsState extends State<ForecastDetails> {
         Expanded(
           child: Text(
             '${widget.data?.city?.name}, ${widget.data?.city?.country}',
-            style: TextStyles.cityDetailsText,
+            style: Themes.cityDetailsText,
           ),
         ),
-        const Icon(
+        Icon(
           Icons.more_horiz_outlined,
-          color: Colors.black,
+          color: Themes.moreIcon,
         ),
       ],
     );
@@ -92,24 +97,33 @@ class _ForecastDetailsState extends State<ForecastDetails> {
     );
   }
 
-  Widget _buildDetailsCharacteristics(){
+  Widget _buildDetailsCharacteristics() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Feels like:',
-          style: TextStyles.feelsLikeText,
+          style: Themes.feelsLikeText,
         ),
         Text(
           "${widget.data?.list?[0].main?.feels_like}°",
-          style: TextStyles.detailsTemp,
+          style: Themes.detailsTemp,
         ),
         const SizedBox(height: 8),
-        Text(widget.data?.list?[0].weather?[0].main ?? ''),
+        Text(
+          widget.data?.list?[0].weather?[0].main ?? '',
+          style: Themes.detailsWeatherText,
+        ),
         const SizedBox(height: 8),
-        Text('Speed of wind ${widget.data?.list?[0].wind?.speed} km/h'),
+        Text(
+          'Speed of wind ${widget.data?.list?[0].wind?.speed} km/h',
+          style: Themes.detailsWindText,
+        ),
         const SizedBox(height: 8),
-        Text('Humidity ${widget.data?.list?[0].main?.humidity} %'),
+        Text(
+          'Humidity ${widget.data?.list?[0].main?.humidity} %',
+          style: Themes.detailsHumidityText,
+        ),
       ],
     );
   }

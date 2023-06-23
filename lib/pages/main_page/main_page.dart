@@ -6,7 +6,8 @@ import 'package:task_3/services/weather_api_client.dart';
 import 'package:task_3/views/weather_drop_down.dart';
 import 'package:task_3/views/weather_text_field.dart';
 import '../../utils/image_path.dart';
-import '../../utils/text_styles.dart';
+import '../../utils/light_text_styles.dart';
+import '../../utils/themes.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -23,6 +24,23 @@ class _MainPageState extends State<MainPage> {
 
   Future<void> getData() async {
     data = await client.getCurrentWeather(_city);
+  }
+
+  String getBackground() {
+    final timeResult = data?.list?.first.dt_txt?.split(' ');
+    if (timeResult == null || timeResult.length < 2) {
+      Themes.isLight = true;
+      return ImagePath.backgroundDay;
+    }
+    final shortTimeResult = timeResult[1].split(':');
+    final formattedTime = shortTimeResult.first;
+    final hour = int.parse(formattedTime);
+    if (hour >= 06 && hour <= 15) {
+      Themes.isLight = true;
+      return ImagePath.backgroundDay;
+    }
+    Themes.isLight = false;
+    return ImagePath.backgroundNight;
   }
 
   @override
@@ -43,9 +61,9 @@ class _MainPageState extends State<MainPage> {
 
   Widget _buildBody() {
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage(ImagePath.backgroundDay),
+          image: AssetImage(getBackground()),
           fit: BoxFit.cover,
         ),
       ),
@@ -74,14 +92,14 @@ class _MainPageState extends State<MainPage> {
         ),
         Text(
           data?.city?.name ?? '',
-          style: TextStyles.cityText,
+          style: Themes.cityText,
         ),
         const SizedBox(
           height: 12,
         ),
         Text(
           "${data?.list?[0].main?.temp}°",
-          style: TextStyles.mainTempText,
+          style: Themes.mainTempText,
         ),
         ForecastInfo(
           isValueByDays: _isValueByDays,
@@ -94,7 +112,7 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  Widget _buildTopNavigationBar(){
+  Widget _buildTopNavigationBar() {
     return Row(
       children: [
         Expanded(

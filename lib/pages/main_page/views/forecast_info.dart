@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:task_3/models/forecast_model.dart';
-import 'package:task_3/utils/text_styles.dart';
+import 'package:task_3/utils/light_text_styles.dart';
 
-import '../../../utils/app_colors.dart';
+import '../../../utils/light_app_colors.dart';
+import '../../../utils/themes.dart';
 
 class ForecastInfo extends StatefulWidget {
   final bool isValueByDays;
@@ -38,7 +39,7 @@ class _ForecastInfoState extends State<ForecastInfo> {
           borderRadius: BorderRadius.all(
             Radius.circular(32),
           ),
-          color: AppColors.forecastTile,
+          color: LightAppColors.forecastTile,
         ),
         child: _buildForecastInfo(),
       ),
@@ -94,7 +95,7 @@ class _ForecastInfoState extends State<ForecastInfo> {
       children: [
         Text(
           formatterDate,
-          style: TextStyles.formattedDateText,
+          style: Themes.formattedDateText,
         ),
         const SizedBox(height: 4),
         Image.network(
@@ -103,7 +104,7 @@ class _ForecastInfoState extends State<ForecastInfo> {
         const SizedBox(height: 4),
         Text(
           widget.data?.list?[index].main?.temp.toString() ?? '',
-          style: TextStyles.infoTemp,
+          style: Themes.infoTemp,
         ),
         const SizedBox(height: 8),
         Column(
@@ -112,11 +113,11 @@ class _ForecastInfoState extends State<ForecastInfo> {
           children: [
             Text(
               '${widget.data?.list?[index].main?.pressure}',
-              style: TextStyles.infoDetail,
+              style: Themes.infoDetail,
             ),
-            const Text(
+            Text(
               'pressure',
-              style: TextStyles.infoDetail,
+              style: Themes.infoDetail,
             )
           ],
         ),
@@ -135,7 +136,7 @@ class _ForecastInfoState extends State<ForecastInfo> {
       children: [
         Text(
           formattedTime ?? '',
-          style: TextStyles.formattedTimeText,
+          style: Themes.formattedTimeText,
         ),
         Image.network(
           'http://openweathermap.org/img/wn/${widget.data?.list?[index].weather?.first.icon}.png',
@@ -143,7 +144,7 @@ class _ForecastInfoState extends State<ForecastInfo> {
         const SizedBox(height: 4),
         Text(
           widget.data?.list?[index].main?.temp.toString() ?? '',
-          style: TextStyles.infoTemp,
+          style: Themes.infoTemp,
         ),
         const SizedBox(height: 8),
         Column(
@@ -152,11 +153,11 @@ class _ForecastInfoState extends State<ForecastInfo> {
           children: [
             Text(
               '${widget.data?.list?[index].main?.pressure}',
-              style: TextStyles.infoDetail,
+              style: Themes.infoDetail,
             ),
-            const Text(
+            Text(
               'pressure',
-              style: TextStyles.infoDetail,
+              style: Themes.infoDetail,
             )
           ],
         ),
