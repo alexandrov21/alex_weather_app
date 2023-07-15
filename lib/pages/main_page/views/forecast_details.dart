@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:task_3/utils/light_app_colors.dart';
-
+import 'package:task_3/utils/app_strings.dart';
 import '../../../models/forecast_model.dart';
-import '../../../utils/light_text_styles.dart';
 import '../../../utils/themes.dart';
 
 class ForecastDetails extends StatefulWidget {
@@ -25,9 +23,7 @@ class _ForecastDetailsState extends State<ForecastDetails> {
 
   Widget _buildBody() {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 16,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Container(
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.all(
@@ -54,11 +50,13 @@ class _ForecastDetailsState extends State<ForecastDetails> {
   }
 
   Widget _buildCityDetails() {
+    final cityName = widget.data?.city?.name;
+    final countryName = widget.data?.city?.country;
     return Row(
       children: [
         Expanded(
           child: Text(
-            '${widget.data?.city?.name}, ${widget.data?.city?.country}',
+            '$cityName, $countryName',
             style: Themes.cityDetailsText,
           ),
         ),
@@ -71,16 +69,12 @@ class _ForecastDetailsState extends State<ForecastDetails> {
   }
 
   Widget _buildForecastDetails() {
+    final weatherIcon = widget.data?.list?.first.weather;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Padding(
-          padding: const EdgeInsets.only(
-            top: 44,
-            left: 20,
-            right: 20,
-            bottom: 20,
-          ),
+          padding: const EdgeInsets.fromLTRB(20, 44, 20, 20),
           child: _buildDetailsCharacteristics(),
         ),
         Padding(
@@ -88,40 +82,50 @@ class _ForecastDetailsState extends State<ForecastDetails> {
             right: 48,
             bottom: 40,
           ),
-          child: Image.network(
-            'http://openweathermap.org/img/wn/${widget.data?.list?[0].weather?[0].icon}.png',
-            scale: 0.6,
-          ),
+          child: weatherIcon != null
+              ? Image.network(
+                  'http://openweathermap.org/img/wn/${weatherIcon.first.icon}.png',
+                  scale: 0.6,
+                )
+              : const SizedBox(
+                  height: 24,
+                  width: 24,
+                  child: Placeholder(),
+                ),
         ),
       ],
     );
   }
 
   Widget _buildDetailsCharacteristics() {
+    final feelsLikeTemp = widget.data?.list?.first.main?.feels_like;
+    final weatherDetails = widget.data?.list?.first.weather?.first.main ?? '';
+    final speedOfWind = widget.data?.list?.first.wind?.speed;
+    final humidity = widget.data?.list?.first.main?.humidity;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Feels like:',
+          AppStrings.feelsLike,
           style: Themes.feelsLikeText,
         ),
         Text(
-          "${widget.data?.list?[0].main?.feels_like}°",
+          "$feelsLikeTemp°",
           style: Themes.detailsTemp,
         ),
         const SizedBox(height: 8),
         Text(
-          widget.data?.list?[0].weather?[0].main ?? '',
+          weatherDetails,
           style: Themes.detailsWeatherText,
         ),
         const SizedBox(height: 8),
         Text(
-          'Speed of wind ${widget.data?.list?[0].wind?.speed} km/h',
+          '${AppStrings.speedOfWind} $speedOfWind ${AppStrings.kmH}',
           style: Themes.detailsWindText,
         ),
         const SizedBox(height: 8),
         Text(
-          'Humidity ${widget.data?.list?[0].main?.humidity} %',
+          '${AppStrings.humidity} $humidity %',
           style: Themes.detailsHumidityText,
         ),
       ],

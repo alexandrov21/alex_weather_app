@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:task_3/models/forecast_model.dart';
-import 'package:task_3/utils/light_text_styles.dart';
-
+import 'package:task_3/utils/app_strings.dart';
 import '../../../utils/light_app_colors.dart';
 import '../../../utils/themes.dart';
 
 class ForecastInfo extends StatefulWidget {
   final bool isValueByDays;
-  final ForecastModel? data;
+  final ForecastModel data;
 
   const ForecastInfo({
     Key? key,
@@ -23,10 +22,6 @@ class ForecastInfo extends StatefulWidget {
 class _ForecastInfoState extends State<ForecastInfo> {
   @override
   Widget build(BuildContext context) {
-    return _buildBody();
-  }
-
-  Widget _buildBody() {
     return Padding(
       padding: const EdgeInsets.only(
         top: 32,
@@ -34,15 +29,19 @@ class _ForecastInfoState extends State<ForecastInfo> {
         left: 16,
         right: 16,
       ),
-      child: Container(
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.all(
-            Radius.circular(32),
-          ),
-          color: LightAppColors.forecastTile,
+      child: _buildBody(),
+    );
+  }
+
+  Widget _buildBody() {
+    return Container(
+      decoration: const BoxDecoration(
+        borderRadius: BorderRadius.all(
+          Radius.circular(32),
         ),
-        child: _buildForecastInfo(),
+        color: LightAppColors.forecastTile,
       ),
+      child: _buildForecastInfo(),
     );
   }
 
@@ -57,8 +56,9 @@ class _ForecastInfoState extends State<ForecastInfo> {
   }
 
   Widget _buildTileForecast() {
+    final forecastInfoTileSize = MediaQuery.of(context).size.height / 5.7;
     return SizedBox(
-      height: MediaQuery.of(context).size.height / 5.7,
+      height: forecastInfoTileSize,
       child: ListView.builder(
         itemCount: widget.isValueByDays ? 5 : 9,
         shrinkWrap: true,
@@ -86,10 +86,13 @@ class _ForecastInfoState extends State<ForecastInfo> {
   }
 
   Widget _buildWeatherByDays(index) {
-    final dateResult = widget.data?.list?[index].dt_txt?.split(' ');
+    final dateResult = widget.data.list?[index].dt_txt?.split(' ');
     String formatterDate = DateFormat.E().format(
-      DateTime.parse(dateResult?[0] ?? ''),
+      DateTime.parse(dateResult?.first ?? ''),
     );
+    final weatherIcon = widget.data.list?[index].weather;
+    final temp = widget.data.list?[index].main?.temp.toString() ?? '';
+    final pressure = widget.data.list?[index].main?.pressure;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -98,12 +101,18 @@ class _ForecastInfoState extends State<ForecastInfo> {
           style: Themes.formattedDateText,
         ),
         const SizedBox(height: 4),
-        Image.network(
-          'http://openweathermap.org/img/wn/${widget.data?.list?[index].weather?.first.icon}.png',
-        ),
+        weatherIcon != null
+            ? Image.network(
+                'http://openweathermap.org/img/wn/${weatherIcon.first.icon}.png',
+              )
+            : const SizedBox(
+                height: 24,
+                width: 24,
+                child: Placeholder(),
+              ),
         const SizedBox(height: 4),
         Text(
-          widget.data?.list?[index].main?.temp.toString() ?? '',
+          temp,
           style: Themes.infoTemp,
         ),
         const SizedBox(height: 8),
@@ -112,11 +121,11 @@ class _ForecastInfoState extends State<ForecastInfo> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              '${widget.data?.list?[index].main?.pressure}',
+              '$pressure',
               style: Themes.infoDetail,
             ),
             Text(
-              'pressure',
+              AppStrings.pressure,
               style: Themes.infoDetail,
             )
           ],
@@ -126,24 +135,32 @@ class _ForecastInfoState extends State<ForecastInfo> {
   }
 
   Widget _buildWeatherByHours(index) {
-    final timeResult = widget.data?.list?[index].dt_txt?.split(' ');
+    final timeResult = widget.data.list?[index].dt_txt?.split(' ');
     final shortTimeResult = timeResult?[1].split(':');
-    final formattedTime = shortTimeResult?[0];
-    // String? formattedTime = DateFormat.Hm().format(
-    //   DateTime.parse(timeResult?[1] ?? ''),
-    // );
+    final formattedTime = shortTimeResult?.first;
+
+    final weatherIcon = widget.data.list?[index].weather;
+    final temp = widget.data.list?[index].main?.temp.toString() ?? '';
+    final pressure = widget.data.list?[index].main?.pressure;
+
     return Column(
       children: [
         Text(
           formattedTime ?? '',
           style: Themes.formattedTimeText,
         ),
-        Image.network(
-          'http://openweathermap.org/img/wn/${widget.data?.list?[index].weather?.first.icon}.png',
-        ),
+        weatherIcon != null
+            ? Image.network(
+                'http://openweathermap.org/img/wn/${weatherIcon.first.icon}.png',
+              )
+            : const SizedBox(
+                width: 24,
+                height: 24,
+                child: Placeholder(),
+              ),
         const SizedBox(height: 4),
         Text(
-          widget.data?.list?[index].main?.temp.toString() ?? '',
+          temp,
           style: Themes.infoTemp,
         ),
         const SizedBox(height: 8),
@@ -152,11 +169,11 @@ class _ForecastInfoState extends State<ForecastInfo> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              '${widget.data?.list?[index].main?.pressure}',
+              '$pressure',
               style: Themes.infoDetail,
             ),
             Text(
-              'pressure',
+              AppStrings.pressure,
               style: Themes.infoDetail,
             )
           ],

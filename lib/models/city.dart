@@ -12,6 +12,10 @@ class City {
     this.country,
   );
 
+  City.empty()
+      : name = '',
+        country = '';
+
   factory City.fromJson(Map<String, dynamic> json) {
     return _$CityFromJson(json);
   }
