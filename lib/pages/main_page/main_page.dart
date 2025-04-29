@@ -82,32 +82,25 @@ class _MainPageState extends State<MainPage> {
   }
 
   String _getBackground() {
-    //final timeresult = _data.list.first.
-    final timeResult = _data.list?.first.dt_txt?.split(' ');
-    if (timeResult == null || timeResult.length < 2) {
-      Themes.isLight = true;
-      return ImagePath.backgroundDay;
-    }
-    final shortTimeResult = timeResult[1].split(':');
-    final formattedTime = shortTimeResult.first;
-    final hour = int.parse(formattedTime);
+    final timezoneOffset = _data.city?.timezone ?? 0; // у секундах
+    final utcTimestamp = _data.list?.first.dt ?? 0; // також у секундах
 
-    // final country = CountryCodes.detailsForLocale((getLocaleFromCountryCode(_data.city?.country?? 'GB')));
-    // final location = tz.getLocation('${country.name}/${_data.city?.name??AppStrings.defaultCity}'); // укажи нужный город
-    // final now = tz.TZDateTime.now(location);
-    // final formattedTime = DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
-    // print (hour);
-    // print('+');
-    // print(_data.city?.name);
-    // print(formattedTime);
-    // print(shortTimeResult);
-    if (hour >= 06 && hour <= 15) {
+    final localDateTime = DateTime.fromMillisecondsSinceEpoch(
+      (utcTimestamp + timezoneOffset) * 1000,
+      isUtc: true,
+    );
+
+    final hour = localDateTime.hour;
+
+    if (hour >= 6 && hour <= 15) {
       Themes.isLight = true;
       return ImagePath.backgroundDay;
+    } else {
+      Themes.isLight = false;
+      return ImagePath.backgroundNight;
     }
-    Themes.isLight = false;
-    return ImagePath.backgroundNight;
   }
+
 
   @override
   Widget build(BuildContext context) {
