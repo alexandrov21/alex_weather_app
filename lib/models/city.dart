@@ -6,10 +6,12 @@ part 'city.g.dart';
 class City {
   String? name;
   String? country;
+  int? timezone;
 
   City(
     this.name,
     this.country,
+    this.timezone,
   );
 
   City.empty()

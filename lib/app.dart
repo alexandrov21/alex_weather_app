@@ -1,13 +1,26 @@
 import 'package:flutter/material.dart';
-import 'pages/main_page/main_page.dart';
+import 'package:task_3/auth/auth_gate.dart';
+import 'package:task_3/auth/login_page.dart';
+import 'package:task_3/auth/register_page.dart';
 
 class App extends StatelessWidget {
-  const App({Key? key}) : super(key: key);
+  const App({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return  const MaterialApp(
-      home: MainPage(),
+    return MaterialApp(
+      title: 'Weather App',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        useMaterial3: true,
+        colorSchemeSeed: Colors.blue,
+      ),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const AuthGate(),
+        '/login': (context) => const LoginPage(),
+        '/register': (context) => const RegisterPage(),
+      },
     );
   }
 }

@@ -10,8 +10,16 @@ class PointOfWeather {
   List<Weather>? weather;
   Wind? wind;
   String? dt_txt;
+  int? dt;
 
-  PointOfWeather(this.main);
+  PointOfWeather({
+    this.main,
+    this.weather,
+    this.wind,
+    this.dt_txt,
+    this.dt,
+  });
+
   factory PointOfWeather.fromJson(Map<String, dynamic> json) {
     return _$PointOfWeatherFromJson(json);
   }
